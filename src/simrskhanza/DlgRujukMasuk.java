@@ -12,13 +12,12 @@
 
 package simrskhanza;
 
-import laporan.DlgCariPenyakit;
 import fungsi.WarnaTable;
+import fungsi.akses;
 import fungsi.batasInput;
 import fungsi.koneksiDB;
 import fungsi.sekuel;
 import fungsi.validasi;
-import fungsi.akses;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
@@ -27,7 +26,6 @@ import java.awt.event.WindowListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,6 +35,7 @@ import javax.swing.JTable;
 import javax.swing.event.DocumentEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import laporan.DlgCariPenyakit;
 
 
 /**
@@ -64,7 +63,7 @@ public final class DlgRujukMasuk extends javax.swing.JDialog {
 
         Object[] row={"P","Perujuk/Rujukan","Alamat Perujuk","No.Rujuk","No.Rawat","No.R.M.",
                   "Nama Pasien","Alamat","Umur","Tgl.Masuk","Tgl.Keluar","JM.Perujuk","Diagnosa Awal",
-                  "Diagnosa Akhir","Status","Dokter Perujuk","Kategori Rujuk","Poli Rujukan","No.Balasan","Keterangan","Kode Penyakit","Nama Penyakit"};
+                  "Diagnosa Akhir","Status","Dokter Perujuk","Kategori Rujuk","Poli Rujukan","No.Balasan","Keterangan","Kode Penyakit","Nama Penyakit","Status Rawat"};
         tabMode=new DefaultTableModel(null,row){
              @Override public boolean isCellEditable(int rowIndex, int colIndex){
                 boolean a = false;
@@ -77,6 +76,7 @@ public final class DlgRujukMasuk extends javax.swing.JDialog {
                  java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, 
                  java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, 
                  java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Double.class, 
+                 java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, 
                  java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, 
                  java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
              };
@@ -91,7 +91,7 @@ public final class DlgRujukMasuk extends javax.swing.JDialog {
         tbObat.setPreferredScrollableViewportSize(new Dimension(500,500));
         tbObat.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        for (i = 0; i < 22; i++) {
+        for (i = 0; i < 23; i++) {
             TableColumn column = tbObat.getColumnModel().getColumn(i);
             if(i==0){
                 column.setPreferredWidth(20);
@@ -133,6 +133,8 @@ public final class DlgRujukMasuk extends javax.swing.JDialog {
                 column.setPreferredWidth(150);
             }else if(i==19){
                 column.setPreferredWidth(150);
+            }else if(i==22){
+                column.setPreferredWidth(100);
             }else{
                 column.setMinWidth(0);
                 column.setMaxWidth(0);
@@ -265,6 +267,8 @@ public final class DlgRujukMasuk extends javax.swing.JDialog {
         jLabel6 = new widget.Label();
         TCari = new widget.TextBox();
         BtnCari = new widget.Button();
+        jLabel11 = new widget.Label();
+        cmbStatus = new widget.ComboBox();
         jLabel7 = new widget.Label();
         LCount = new widget.Label();
         PanelInput = new javax.swing.JPanel();
@@ -301,7 +305,7 @@ public final class DlgRujukMasuk extends javax.swing.JDialog {
         WindowPerujuk.setUndecorated(true);
         WindowPerujuk.setResizable(false);
 
-        internalFrame6.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 245, 235)), "::[ Perujuk ]::", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(50,50,50))); // NOI18N
+        internalFrame6.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 245, 235)), "::[ Perujuk ]::", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(50, 50, 50))); // NOI18N
         internalFrame6.setName("internalFrame6"); // NOI18N
         internalFrame6.setLayout(new java.awt.BorderLayout(1, 1));
 
@@ -460,7 +464,7 @@ public final class DlgRujukMasuk extends javax.swing.JDialog {
 
         DTPReg.setEditable(false);
         DTPReg.setForeground(new java.awt.Color(50, 70, 50));
-        DTPReg.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "26-02-2019" }));
+        DTPReg.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "01-05-2019" }));
         DTPReg.setDisplayFormat("dd-MM-yyyy");
         DTPReg.setName("DTPReg"); // NOI18N
         DTPReg.setOpaque(false);
@@ -469,7 +473,7 @@ public final class DlgRujukMasuk extends javax.swing.JDialog {
         setUndecorated(true);
         setResizable(false);
 
-        internalFrame1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 245, 235)), "::[ Data Rujukan Masuk ]::", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(50,50,50))); // NOI18N
+        internalFrame1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 245, 235)), "::[ Data Rujukan Masuk ]::", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(50, 50, 50))); // NOI18N
         internalFrame1.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
         internalFrame1.setName("internalFrame1"); // NOI18N
         internalFrame1.setLayout(new java.awt.BorderLayout(1, 1));
@@ -642,7 +646,7 @@ public final class DlgRujukMasuk extends javax.swing.JDialog {
         panelGlass9.add(jLabel19);
 
         DTPCari1.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "26-02-2019" }));
+        DTPCari1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "01-05-2019" }));
         DTPCari1.setDisplayFormat("dd-MM-yyyy");
         DTPCari1.setName("DTPCari1"); // NOI18N
         DTPCari1.setOpaque(false);
@@ -656,7 +660,7 @@ public final class DlgRujukMasuk extends javax.swing.JDialog {
         panelGlass9.add(jLabel21);
 
         DTPCari2.setForeground(new java.awt.Color(50, 70, 50));
-        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "26-02-2019" }));
+        DTPCari2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "01-05-2019" }));
         DTPCari2.setDisplayFormat("dd-MM-yyyy");
         DTPCari2.setName("DTPCari2"); // NOI18N
         DTPCari2.setOpaque(false);
@@ -693,6 +697,20 @@ public final class DlgRujukMasuk extends javax.swing.JDialog {
             }
         });
         panelGlass9.add(BtnCari);
+
+        jLabel11.setText("Status :");
+        jLabel11.setName("jLabel11"); // NOI18N
+        jLabel11.setPreferredSize(new java.awt.Dimension(70, 23));
+        panelGlass9.add(jLabel11);
+
+        cmbStatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Semua", "Ralan", "Ranap" }));
+        cmbStatus.setName("cmbStatus"); // NOI18N
+        cmbStatus.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cmbStatusKeyPressed(evt);
+            }
+        });
+        panelGlass9.add(cmbStatus);
 
         jLabel7.setText("Record :");
         jLabel7.setName("jLabel7"); // NOI18N
@@ -852,7 +870,7 @@ public final class DlgRujukMasuk extends javax.swing.JDialog {
         jLabel14.setText("Dokter Perujuk :");
         jLabel14.setName("jLabel14"); // NOI18N
         FormInput.add(jLabel14);
-        jLabel14.setBounds(434, 40, 100, 23);
+        jLabel14.setBounds(444, 40, 90, 23);
 
         Dokter.setHighlighter(null);
         Dokter.setName("Dokter"); // NOI18N
@@ -1665,6 +1683,10 @@ private void TAlamatKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_T
         }
     }//GEN-LAST:event_tbObatKeyReleased
 
+    private void cmbStatusKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbStatusKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbStatusKeyPressed
+
     /**
     * @param args the command line arguments
     */
@@ -1722,9 +1744,11 @@ private void TAlamatKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_T
     public javax.swing.JDialog WindowPerujuk;
     private widget.Button btnCariRujuk;
     private widget.Button btnDokter;
+    private widget.ComboBox cmbStatus;
     private widget.InternalFrame internalFrame1;
     private widget.InternalFrame internalFrame6;
     private widget.Label jLabel10;
+    private widget.Label jLabel11;
     private widget.Label jLabel12;
     private widget.Label jLabel13;
     private widget.Label jLabel14;
@@ -1757,11 +1781,12 @@ private void TAlamatKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_T
     public void tampil() {        
         Valid.tabelKosong(tabMode);
         try{
-            pstampil=koneksi.prepareStatement(
+            if(cmbStatus.getSelectedItem().equals("Semua")){
+                pstampil=koneksi.prepareStatement(
                     "select rujuk_masuk.perujuk,rujuk_masuk.alamat,rujuk_masuk.no_rujuk,reg_periksa.no_rawat,reg_periksa.no_rkm_medis,"+
                     "pasien.nm_pasien,reg_periksa.almt_pj,concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur)as umur,reg_periksa.tgl_registrasi,"+
                     "rujuk_masuk.jm_perujuk,rujuk_masuk.dokter_perujuk,rujuk_masuk.kd_penyakit,penyakit.nm_penyakit,rujuk_masuk.kategori_rujuk,"+
-                    "rujuk_masuk.keterangan,rujuk_masuk.no_balasan,poliklinik.nm_poli "+
+                    "rujuk_masuk.keterangan,rujuk_masuk.no_balasan,poliklinik.nm_poli,reg_periksa.status_lanjut "+
                     "from reg_periksa inner join pasien inner join rujuk_masuk inner join penyakit inner join poliklinik "+
                     "on reg_periksa.no_rkm_medis=pasien.no_rkm_medis and reg_periksa.no_rawat=rujuk_masuk.no_rawat "+
                     "and penyakit.kd_penyakit=rujuk_masuk.kd_penyakit and reg_periksa.kd_poli=poliklinik.kd_poli where "+
@@ -1778,6 +1803,29 @@ private void TAlamatKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_T
                     "reg_periksa.tgl_registrasi between ? and ? and rujuk_masuk.no_balasan like ? or "+
                     "reg_periksa.tgl_registrasi between ? and ? and rujuk_masuk.kd_penyakit like ? "+
                     "order by reg_periksa.tgl_registrasi ");
+            }else{
+            pstampil=koneksi.prepareStatement(
+                    "select rujuk_masuk.perujuk,rujuk_masuk.alamat,rujuk_masuk.no_rujuk,reg_periksa.no_rawat,reg_periksa.no_rkm_medis,"+
+                    "pasien.nm_pasien,reg_periksa.almt_pj,concat(reg_periksa.umurdaftar,' ',reg_periksa.sttsumur)as umur,reg_periksa.tgl_registrasi,"+
+                    "rujuk_masuk.jm_perujuk,rujuk_masuk.dokter_perujuk,rujuk_masuk.kd_penyakit,penyakit.nm_penyakit,rujuk_masuk.kategori_rujuk,"+
+                    "rujuk_masuk.keterangan,rujuk_masuk.no_balasan,poliklinik.nm_poli,reg_periksa.status_lanjut "+
+                    "from reg_periksa inner join pasien inner join rujuk_masuk inner join penyakit inner join poliklinik "+
+                    "on reg_periksa.no_rkm_medis=pasien.no_rkm_medis and reg_periksa.no_rawat=rujuk_masuk.no_rawat "+
+                    "and penyakit.kd_penyakit=rujuk_masuk.kd_penyakit and reg_periksa.kd_poli=poliklinik.kd_poli where "+
+                    "reg_periksa.tgl_registrasi between ? and ? and rujuk_masuk.perujuk like ? and reg_periksa.status_lanjut='"+cmbStatus.getSelectedItem().toString()+"' or "+
+                    "reg_periksa.tgl_registrasi between ? and ? and reg_periksa.no_rawat like ? and reg_periksa.status_lanjut='"+cmbStatus.getSelectedItem().toString()+"' or "+
+                    "reg_periksa.tgl_registrasi between ? and ? and reg_periksa.no_rkm_medis like ? and reg_periksa.status_lanjut='"+cmbStatus.getSelectedItem().toString()+"' or "+
+                    "reg_periksa.tgl_registrasi between ? and ? and pasien.nm_pasien like ? and reg_periksa.status_lanjut='"+cmbStatus.getSelectedItem().toString()+"' or "+
+                    "reg_periksa.tgl_registrasi between ? and ? and reg_periksa.almt_pj like ? and reg_periksa.status_lanjut='"+cmbStatus.getSelectedItem().toString()+"' or "+
+                    "reg_periksa.tgl_registrasi between ? and ? and rujuk_masuk.no_rujuk like ? and reg_periksa.status_lanjut='"+cmbStatus.getSelectedItem().toString()+"' or "+
+                    "reg_periksa.tgl_registrasi between ? and ? and rujuk_masuk.dokter_perujuk like ? and reg_periksa.status_lanjut='"+cmbStatus.getSelectedItem().toString()+"' or "+
+                    "reg_periksa.tgl_registrasi between ? and ? and penyakit.nm_penyakit like ? and reg_periksa.status_lanjut='"+cmbStatus.getSelectedItem().toString()+"' or "+
+                    "reg_periksa.tgl_registrasi between ? and ? and rujuk_masuk.kategori_rujuk like ? and reg_periksa.status_lanjut='"+cmbStatus.getSelectedItem().toString()+"' or "+
+                    "reg_periksa.tgl_registrasi between ? and ? and rujuk_masuk.keterangan like ? and reg_periksa.status_lanjut='"+cmbStatus.getSelectedItem().toString()+"' or "+
+                    "reg_periksa.tgl_registrasi between ? and ? and rujuk_masuk.no_balasan like ? and reg_periksa.status_lanjut='"+cmbStatus.getSelectedItem().toString()+"' or "+
+                    "reg_periksa.tgl_registrasi between ? and ? and rujuk_masuk.kd_penyakit like ? and reg_periksa.status_lanjut='"+cmbStatus.getSelectedItem().toString()+"' "+
+                    "order by reg_periksa.tgl_registrasi ");
+            }
             try {
                 pstampil.setString(1,Valid.SetTgl(DTPCari1.getSelectedItem()+""));
                 pstampil.setString(2,Valid.SetTgl(DTPCari2.getSelectedItem()+""));
@@ -1847,7 +1895,7 @@ private void TAlamatKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_T
                         rs.getDouble("jm_perujuk"),rs.getString("kd_penyakit")+" "+rs.getString("nm_penyakit"),
                         diagnosa2,status,rs.getString("dokter_perujuk"),rs.getString("kategori_rujuk"),
                         rs.getString("nm_poli"),rs.getString("no_balasan"),rs.getString("keterangan"),
-                        rs.getString("kd_penyakit"),rs.getString("nm_penyakit")
+                        rs.getString("kd_penyakit"),rs.getString("nm_penyakit"),rs.getString("status_lanjut")
                     });
                 }
             } catch (Exception e) {
