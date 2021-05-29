@@ -25,7 +25,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import kepegawaian.DlgCariPetugas;
 import keuangan.Jurnal;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -75,7 +74,7 @@ public class DlgCariReturJual extends javax.swing.JDialog {
         }
 
         tabMode = new DefaultTableModel(null, new Object[]{
-            "No.Retur", "Tgl.Retur", "Petugas", "Pasien", "No.Nota", "Barang", "Satuan", "Harga Retur(Rp)", "Jml", "SubTotal(Rp)"
+            "No.Retur", "Tgl.Retur", "Petugas", "Pasien", "No.Nota", "Barang", "Satuan", "Harga Retur(Rp)", "Jml", "SubTotal(Rp)","nip"
         }) {
             @Override
             public boolean isCellEditable(int rowIndex, int colIndex) {
@@ -87,7 +86,7 @@ public class DlgCariReturJual extends javax.swing.JDialog {
         tbRetur.setPreferredScrollableViewportSize(new Dimension(800, 800));
         tbRetur.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 11; i++) {
             TableColumn column = tbRetur.getColumnModel().getColumn(i);
             if (i == 0) {
                 column.setPreferredWidth(120);
@@ -109,6 +108,9 @@ public class DlgCariReturJual extends javax.swing.JDialog {
                 column.setPreferredWidth(30);
             } else if (i == 9) {
                 column.setPreferredWidth(100);
+            }else{
+                column.setMinWidth(0);
+                column.setMaxWidth(0);
             }
         }
         tbRetur.setDefaultRenderer(Object.class, new WarnaTable());
@@ -992,8 +994,10 @@ public class DlgCariReturJual extends javax.swing.JDialog {
         if (tabMode.getRowCount() != 0) {
             try {
                 NoRetur.setText(tbRetur.getValueAt(tbRetur.getSelectedRow(), 0).toString());
-                String petugas = StringUtils.substringAfter(tbRetur.getValueAt(tbRetur.getSelectedRow(), 2).toString(), ", ");
-                String kdpetugas = StringUtils.substringBefore(tbRetur.getValueAt(tbRetur.getSelectedRow(), 2).toString(), ", ");
+                String petugas = tbRetur.getValueAt(tbRetur.getSelectedRow(), 2).toString();
+                String kdpetugas = tbRetur.getValueAt(tbRetur.getSelectedRow(), 10).toString();
+//                String petugas = StringUtils.substringAfter(tbRetur.getValueAt(tbRetur.getSelectedRow(), 2).toString(), ", ");
+//                String kdpetugas = StringUtils.substringBefore(tbRetur.getValueAt(tbRetur.getSelectedRow(), 10).toString(), ", ");
                 Kdptg.setText(kdpetugas);
                 Nmptg.setText(petugas);
             } catch (java.lang.NullPointerException e) {
@@ -1065,16 +1069,16 @@ public class DlgCariReturJual extends javax.swing.JDialog {
         ptg = "";
         sat = "";
         bar = "";
-        if (!NoRetur.getText().equals("")) {
+        if (!NoRetur.getText().isBlank()) {
             noret = " and returjual.no_retur_jual='" + NoRetur.getText() + "' ";
         }
-        if (!Nmptg.getText().equals("")) {
+        if (!Nmptg.getText().isBlank()) {
             ptg = " and petugas.nama='" + Nmptg.getText() + "' ";
         }
-        if (!nmsat.getText().equals("")) {
+        if (!nmsat.getText().isBlank()) {
             sat = " and kodesatuan.satuan='" + nmsat.getText() + "' ";
         }
-        if (!nmbar.getText().equals("")) {
+        if (!nmbar.getText().isBlank()) {
             bar = " and databarang.nama_brng='" + nmbar.getText() + "' ";
         }
 
@@ -1110,18 +1114,18 @@ public class DlgCariReturJual extends javax.swing.JDialog {
                         rs.getString(2),
                         rs.getString(4),
                         rs.getString(6),
-                        "Retur Jual : di " + rs.getString(7), "", "", "", "", ""
+                        "Retur Jual : di " + rs.getString(7), "", "", "", "", "",rs.getString(3)
                     });
                     sat = "";
                     bar = "";
                     nonot = "";
-                    if (!nmsat.getText().equals("")) {
+                    if (!nmsat.getText().isBlank()) {
                         sat = " and kodesatuan.satuan='" + nmsat.getText() + "' ";
                     }
-                    if (!nmbar.getText().equals("")) {
+                    if (!nmbar.getText().isBlank()) {
                         bar = " and databarang.nama_brng='" + nmbar.getText() + "' ";
                     }
-                    if (!NoNota.getText().equals("")) {
+                    if (!NoNota.getText().isBlank()) {
                         nonot = " and detreturjual.nota_jual='" + NoNota.getText() + "' ";
                     }
                     ps2 = koneksi.prepareStatement("select detreturjual.nota_jual,detreturjual.kode_brng,databarang.nama_brng, "
@@ -1178,7 +1182,6 @@ public class DlgCariReturJual extends javax.swing.JDialog {
         } catch (Exception e) {
             System.out.println("Notifikasi : " + e);
         }
-
     }
 
     /**
