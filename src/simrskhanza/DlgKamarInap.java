@@ -92,6 +92,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
     public DlgReg reg = new DlgReg(null, false);
     public DlgSpri spri = new DlgSpri(null, false);
     public DlgPasienMati pasienMeninggal = new DlgPasienMati(null, false);
+    public DlgKetCovid ketCovid = new DlgKetCovid(null, false);
     public DlgBilingRanap billing = new DlgBilingRanap(null, false);
     public DlgDiagnosaPenyakit diagnosa = new DlgDiagnosaPenyakit(null, false);
     private SimpleDateFormat dateformat = new SimpleDateFormat("yyyy/MM/dd");
@@ -1132,6 +1133,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
         MnSuratPernyataan = new javax.swing.JMenuItem();
         MnSpri = new javax.swing.JMenuItem();
         MnSuratKematian = new javax.swing.JMenuItem();
+        MnSuratKetCovid = new javax.swing.JMenuItem();
         MnGelang = new javax.swing.JMenu();
         MnLabelTracker = new javax.swing.JMenuItem();
         MnLabelTracker1 = new javax.swing.JMenuItem();
@@ -2531,6 +2533,22 @@ public class DlgKamarInap extends javax.swing.JDialog {
             }
         });
         MnLaporan.add(MnSuratKematian);
+
+        MnSuratKetCovid.setBackground(new java.awt.Color(255, 255, 254));
+        MnSuratKetCovid.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MnSuratKetCovid.setForeground(new java.awt.Color(50, 50, 50));
+        MnSuratKetCovid.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png"))); // NOI18N
+        MnSuratKetCovid.setText("Surat Keterangan COVID 19");
+        MnSuratKetCovid.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        MnSuratKetCovid.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        MnSuratKetCovid.setName("MnSuratKetCovid"); // NOI18N
+        MnSuratKetCovid.setPreferredSize(new java.awt.Dimension(210, 26));
+        MnSuratKetCovid.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnSuratKetCovidActionPerformed(evt);
+            }
+        });
+        MnLaporan.add(MnSuratKetCovid);
 
         jPopupMenu1.add(MnLaporan);
 
@@ -5178,6 +5196,25 @@ public class DlgKamarInap extends javax.swing.JDialog {
         //Simpan Surat ket ranap
         simpanKetRanap();
     }//GEN-LAST:event_MnCetakSuratKeteranganRanapActionPerformed
+
+    private void MnSuratKetCovidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnSuratKetCovidActionPerformed
+        // TODO add your handling code here:
+        if (tabMode.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(rootPane, "Maaf, table masih kosong...!!!!");
+            TCari.requestFocus();
+        } else {
+            if (tbKamIn.getSelectedRow() > 0) {
+                ketCovid.setSize(internalFrame1.getWidth() - 20, internalFrame1.getHeight() - 20);
+                ketCovid.setLocationRelativeTo(internalFrame1);
+                ketCovid.setNoRm(tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 1).toString(), 
+                        tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 0).toString(), 
+                        tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 2).toString(),
+                        tbKamIn.getValueAt(tbKamIn.getSelectedRow(), 19).toString());
+                ketCovid.tampil();
+                ketCovid.setVisible(true);
+            }
+        }
+    }//GEN-LAST:event_MnSuratKetCovidActionPerformed
 
     private void getDataCoder() {
         if (tableCoder.getSelectedRow() != -1) {
@@ -11827,6 +11864,7 @@ public class DlgKamarInap extends javax.swing.JDialog {
     private javax.swing.JMenuItem MnStokObatPasien;
     private javax.swing.JMenuItem MnSuratJaminanPelayanan;
     private javax.swing.JMenuItem MnSuratKematian;
+    private javax.swing.JMenuItem MnSuratKetCovid;
     private javax.swing.JMenuItem MnSuratPernyataan;
     private javax.swing.JMenuItem MnTeridentifikasiTB;
     private javax.swing.JMenuItem MnTilikBedah;
@@ -12647,7 +12685,8 @@ public class DlgKamarInap extends javax.swing.JDialog {
         String no_surat = Valid.autoNomer3("select ifnull(MAX(CONVERT(RIGHT(no_surat,3),signed)),0) from surat_ket_ranap where tgl_perawatan='" + tbKamIn.getValueAt(i, 11).toString() + "' ",
                 "SKR" + tbKamIn.getValueAt(i, 11).toString().substring(0, 4) + tbKamIn.getValueAt(i, 11).toString().substring(5, 7) + tbKamIn.getValueAt(i, 11).toString().substring(8, 10), 3);
         System.out.println("No Surat = " + no_surat);
-        if (Sequel.cariIsi("select no_rawat from surat_ket_ranap where no_rawat='" + tbKamIn.getValueAt(i, 0).toString() + "'") != null) {
+        String ada = Sequel.cariIsi("select no_rawat from surat_ket_ranap where no_rawat='" + tbKamIn.getValueAt(i, 0).toString() + "'");
+        if (!ada.isEmpty()) {
             cetak(tbKamIn.getValueAt(i, 0).toString());
         } else {
             if (Sequel.menyimpantf("surat_ket_ranap", "?,?,?", "No.Surat Ranap", 3, new String[]{
