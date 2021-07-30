@@ -1,12 +1,10 @@
 package simrskhanza;
-import kepegawaian.DlgCariPetugas;
-import keuangan.Jurnal;
 import fungsi.WarnaTable;
+import fungsi.akses;
 import fungsi.batasInput;
 import fungsi.koneksiDB;
 import fungsi.sekuel;
 import fungsi.validasi;
-import fungsi.akses;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
@@ -24,6 +22,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import kepegawaian.DlgCariDokter;
+import kepegawaian.DlgCariPetugas;
+import keuangan.Jurnal;
 
 /**
  *
@@ -299,6 +299,7 @@ public class DlgCariPeriksaRadiologi extends javax.swing.JDialog {
         MnLihatHasil = new javax.swing.JMenuItem();
         MnLihatGambar = new javax.swing.JMenuItem();
         MnUbahDokterPetugas = new javax.swing.JMenuItem();
+        MnCetakHasil = new javax.swing.JMenuItem();
         WindowHasil = new javax.swing.JDialog();
         internalFrame6 = new widget.InternalFrame();
         panelGlass6 = new widget.panelisi();
@@ -418,6 +419,20 @@ public class DlgCariPeriksaRadiologi extends javax.swing.JDialog {
             }
         });
         jPopupMenu1.add(MnUbahDokterPetugas);
+
+        MnCetakHasil.setBackground(new java.awt.Color(255, 255, 254));
+        MnCetakHasil.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        MnCetakHasil.setForeground(new java.awt.Color(50, 50, 50));
+        MnCetakHasil.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/category.png"))); // NOI18N
+        MnCetakHasil.setText("Cetak Label Hasil");
+        MnCetakHasil.setName("MnCetakHasil"); // NOI18N
+        MnCetakHasil.setPreferredSize(new java.awt.Dimension(250, 28));
+        MnCetakHasil.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnCetakHasilActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(MnCetakHasil);
 
         WindowHasil.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         WindowHasil.setName("WindowHasil"); // NOI18N
@@ -1596,6 +1611,25 @@ private void tbDokterKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
         }
     }//GEN-LAST:event_MnUbahDokterPetugasActionPerformed
 
+    private void MnCetakHasilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnCetakHasilActionPerformed
+        // TODO add your handling code here:
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            Map<String, Object> param = new HashMap<>();
+        param.put("namars", akses.getnamars());
+            param.put("alamatrs", akses.getalamatrs());
+            param.put("kotars", akses.getkabupatenrs());
+            param.put("propinsirs", akses.getpropinsirs());
+            param.put("kontakrs", akses.getkontakrs());
+            param.put("emailrs", akses.getemailrs());
+            Valid.MyReportqry("rptHasilRad.jasper", "report", "::[ Barcode No.Rawat ]::",
+                    "SELECT nm_pasien,umur,alamat,pasien.jk,tgl_registrasi,nm_dokter FROM pasien "
+                  + "INNER JOIN reg_periksa ON pasien.`no_rkm_medis`=reg_periksa.`no_rkm_medis` "
+                  + "INNER JOIN dokter ON dokter.`kd_dokter`=reg_periksa.`kd_dokter` "
+                    + " where "
+                    + " reg_periksa.no_rawat='" + NoRawat.getText() + "'", param);
+            this.setCursor(Cursor.getDefaultCursor());
+    }//GEN-LAST:event_MnCetakHasilActionPerformed
+
     /**
     * @param args the command line arguments
     */
@@ -1631,6 +1665,7 @@ private void tbDokterKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_
     private widget.TextBox KdPtgUbah;
     private widget.TextBox KodePerujuk;
     private widget.TextBox KodePj;
+    private javax.swing.JMenuItem MnCetakHasil;
     private javax.swing.JMenuItem MnCetakNota;
     private javax.swing.JMenuItem MnLihatGambar;
     private javax.swing.JMenuItem MnLihatHasil;
